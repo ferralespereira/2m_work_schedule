@@ -72,6 +72,24 @@
     margin: 0 0 16px;
     display: block;
   }
+  .section .summary {
+    background: #f9fafb;
+    border-left: 3px solid var(--done);
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin: 12px 0 18px;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .section .summary strong {
+    color: var(--done);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 12px;
+    display: block;
+    margin-bottom: 4px;
+  }
   ol.tasks {
     list-style: none;
     counter-reset: task;
@@ -248,6 +266,10 @@
         Thursday, April 23, 2026 &middot;
       </h2>
       <span class="author"><span class="dot"></span>Author: unknown &lt;ferralespereira&gt;</span>
+      <div class="summary">
+        <strong>Summary</strong>
+        No tasks logged yet.
+      </div>
       <ul class="commits">
       </ul>
     </section>
@@ -257,6 +279,10 @@
         Wednesday, April 22, 2026 &middot;
       </h2>
       <span class="author"><span class="dot"></span>Author: unknown &lt;ferralespereira&gt;</span>
+      <div class="summary">
+        <strong>Summary</strong>
+        Fetching Kawasaki product images from the internet (prompt-based, named by SKU) &mdash; reached ~27% of the 6,792-row CSV with 1,390 images downloaded. Kicked off Scag product work: pulled the Scag CSV from Shopify and began matching prices against the 2026 Billy Goat Parts File. Ordered parts with Jose in the afternoon.
+      </div>
       <ul class="commits">
         <li>
           <div class="desc">
@@ -301,6 +327,10 @@
         Tuesday, April 21, 2026 &middot;
       </h2>
       <span class="author"><span class="dot"></span>Author: unknown &lt;ferralespereira&gt;</span>
+      <div class="summary">
+        <strong>Summary</strong>
+        Semrush cleanup &mdash; deleted unavailable directory listings, removed duplicates, posted to Google Business Profile, and added a new photo. Heavy CSV work on <code>noengine_products_with_descriptions.csv</code>: removed price/newproduct/appearsinoriginal columns, rebuilt tags (<code>dont-sell</code>, <code>new-part</code>) and variant prices based on <code>customerprice</code>. Also tagged inactive engines in <code>engine_products_with_descriptions.csv</code>. Ordered Grasshopper products with Jose in the morning and Wesco/Metabo/Still/Yanmar in the afternoon.
+      </div>
       <ul class="commits">
         <li>
           <div class="desc">
@@ -380,6 +410,10 @@
         Monday, April 20, 2026 &middot;
       </h2>
       <span class="author"><span class="dot"></span>Author: unknown &lt;ferralespereira&gt;</span>
+      <div class="summary">
+        <strong>Summary</strong>
+        Cleaned up <code>engine_products_with_descriptions.csv</code>: removed <code>customerprice</code>, <code>customerpricediff</code>, <code>newproduct</code>, and <code>appearsinoriginal</code> columns, set tags for new and existing Kawasaki engines, and updated variant price &amp; status based on customer price (marking zero-price engines inactive). Continued settings pass on both engines and noengines CSV files, and ordered products with Jose in the afternoon.
+      </div>
       <ul class="commits">
         <li>
           <div class="desc">
