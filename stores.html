@@ -263,6 +263,43 @@
     font-size: 12px;
     margin-top: 8px;
   }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  table thead tr {
+    background: var(--accent);
+    color: #ffffff;
+  }
+  table thead th {
+    padding: 14px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.01em;
+  }
+  table tbody tr {
+    background: var(--card);
+    color: var(--ink);
+    border-bottom: 1px solid var(--border);
+  }
+  table tbody tr:last-child {
+    border-bottom: none;
+  }
+  table tbody td {
+    padding: 14px 16px;
+    font-size: 13px;
+  }
+  table tbody a {
+    color: var(--accent);
+    text-decoration: none;
+  }
+  table tbody a:hover {
+    text-decoration: underline;
+  }
 </style>
 </head>
 <body>
@@ -282,7 +319,9 @@
 
       <!-- 
        create a table here with 3 columns: Task, Status, Notes. The table should have a header row and 5 rows of data. The Task column should contain the task name, the Status column should contain either "In Progress", "Completed", or "Pending", and the Notes column should contain any additional information about the task. -->
-      <table>
+
+       <!-- improve the styling of the table to match the rest of the page, using the same colors and fonts. The header row should have a background color of var(--accent) and white text, while the data rows should have a background color of var(--card) and black text. The table should also have a border and some padding to make it look more polished. -->
+       <table>
         <thead>
           <tr>
             <th>Store</th>
