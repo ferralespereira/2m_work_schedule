@@ -335,6 +335,54 @@
 
     <section class="section done">
       <h2 class="meta">
+        Friday, May 1, 2026 &middot;
+      </h2>
+      <span class="author"><span class="dot"></span>Author: unknown &lt;ferralespereira&gt;</span>
+      <div class="summary">
+        <strong>Summary</strong>
+        Major Scag CSV cleanup pass: updated <code>Variant Price</code> (~43,000 rows) using the four reference files with several matcher fixes, applied May Echo/Shindaiwa overrides (9,966 rows), refreshed <code>Cost per item</code> (8,208 rows), corrected <code>dont-sell</code> Tags (~7,500 changes), filled <code>item_superseded_handle</code> for 310 rows, and set <code>Variant Compare At Price</code> to Variant Price &times; 1.3 across 119,253 rows. Working with Jose ordering Carswell, Yanmar, Bush, Grasshopper, American Landmaster, and Sthil in the afternoon.
+      </div>
+      <ul class="commits">
+        <li>
+          <div class="desc">
+            Scag csv &rarr; <code>Variant Price</code>: updated ~43,000 rows from the four reference files (Billy Goat, Echo/Shindaiwa March, Scag Dealer, Kawasaki). Required several matcher fixes along the way: dash-stripped Kawasaki SKUs (+246), multi-step Echo supersession chains (+3), Scag S-prefix REPLACED-BY chains (+308), and the <code>item_superseded_by</code> fallback for previously-unmatched rows.
+          </div>
+        </li>
+        <li>
+          <div class="desc">
+            Scag csv &rarr; <code>Variant Price</code> (May override): applied the new May Echo/Shindaiwa file&rsquo;s Retail values, overriding 9,966 prices in <code>file_3</code> (the only file with Echo/Shindaiwa rows).
+          </div>
+        </li>
+        <li>
+          <div class="desc">
+            Scag csv &rarr; <code>Cost per item</code>: updated 8,208 rows in <code>file_3</code> using the May file&rsquo;s Bracket 1 column for the same 9,966 rows whose price changed.
+          </div>
+        </li>
+        <li>
+          <div class="desc">
+            Scag csv &rarr; <code>Tags</code> / <code>dont-sell</code>: set the tag correctly for unmatched rows, excluding KOHLER ENGINE (no Kohler price file) and image-attachment rows. About 7,500 tag changes total across all files.
+          </div>
+        </li>
+        <li>
+          <div class="desc">
+            Scag csv &rarr; <code>item_superseded_handle</code>: filled in for 310 rows by looking up each successor SKU&rsquo;s Handle across all three files. 1,571 rows remain blank because their 1,276 unique successor SKUs aren&rsquo;t yet products in the Shopify catalog (mostly Kawasaki).
+          </div>
+        </li>
+        <li>
+          <div class="desc">
+            Scag csv &rarr; <code>Variant Compare At Price</code>: set to Variant Price &times; 1.3 for 119,253 rows.
+          </div>
+        </li>
+        <li>
+          <div class="desc">
+            Working with Jose &rarr; ordering Carswell, Yanmar, Bush, Grasshopper, American Landmaster, Sthil (in the afternoon).
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section class="section done">
+      <h2 class="meta">
         Thursday, April 30, 2026 &middot;
       </h2>
       <span class="author"><span class="dot"></span>Author: unknown &lt;ferralespereira&gt;</span>
