@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Work Schedule — Week of April 27, 2026</title>
+<style>
+  :root {
+    --bg: #f5f7fa;
+    --card: #ffffff;
+    --ink: #1f2937;
+    --muted: #6b7280;
+    --accent: #2563eb;
+    --accent-soft: #dbeafe;
+    --done: #059669;
+    --done-soft: #d1fae5;
+    --border: #e5e7eb;
+    --chip: #eef2ff;
+    --chip-ink: #4338ca;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.5;
+    padding: 32px 16px;
+  }
+  .container {
+    max-width: 880px;
+    margin: 0 auto;
+  }
+  header {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  header h1 {
+    margin: 0 0 6px;
+    font-size: 28px;
+    letter-spacing: -0.01em;
+  }
+  header .sub {
+    color: var(--muted);
+    font-size: 14px;
+  }
+  header .nav {
+    margin-top: 14px;
+  }
+  header .nav a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: linear-gradient(135deg, var(--accent) 0%, #1d4ed8 100%);
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    text-decoration: none;
+    border-radius: 999px;
+    box-shadow: 0 1px 2px rgba(37, 99, 235, 0.25), 0 4px 10px rgba(37, 99, 235, 0.15);
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+  }
+  header .nav a:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3), 0 6px 14px rgba(37, 99, 235, 0.2);
+    background: linear-gradient(135deg, #1d4ed8 0%, #1e3a8a 100%);
+  }
+  header .nav a .arrow {
+    font-size: 15px;
+    line-height: 1;
+  }
+  header .nav a .label-main {
+    display: inline-block;
+  }
+  header .nav a .label-sub {
+    opacity: 0.75;
+    font-weight: 500;
+    font-size: 12px;
+  }
+  .section {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+  }
+  .section h2 {
+    margin: 0 0 4px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .section h2 .bar {
+    width: 4px;
+    height: 20px;
+    border-radius: 2px;
+    background: var(--accent);
+  }
+  .section.done h2 .bar { background: var(--done); }
+  .section .meta {
+    color: var(--ink);
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 16px;
+    display: block;
+  }
+  .section .summary {
+    background: #f9fafb;
+    border-left: 3px solid var(--done);
+    padding: 10px 14px;
+    border-radius: 6px;
+    margin: 12px 0 18px;
+    color: var(--ink);
+    font-size: 14px;
+    line-height: 1.55;
+  }
+  .section .summary strong {
+    color: var(--done);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 12px;
+    display: block;
+    margin-bottom: 4px;
+  }
+  ol.tasks {
+    list-style: none;
+    counter-reset: task;
+    padding: 0;
+    margin: 0;
+  }
+  ol.tasks li {
+    counter-increment: task;
+    position: relative;
+    padding: 12px 12px 12px 44px;
+    border-bottom: 1px solid var(--border);
+  }
+  ol.tasks li:last-child { border-bottom: none; }
+  ol.tasks li::before {
+    content: counter(task);
+    position: absolute;
+    left: 8px;
+    top: 12px;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  ol.tasks li .note {
+    display: block;
+    color: var(--muted);
+    font-size: 13px;
+    margin-top: 4px;
+  }
+  ol.tasks li .pending {
+    display: block;
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  ol.tasks li .pending .pending-label {
+    color: #b45309;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    font-size: 11px;
+  }
+  ol.tasks li .pending ul {
+    list-style: disc;
+    margin: 4px 0 0;
+    padding-left: 22px;
+    color: var(--muted);
+  }
+  ol.tasks li .pending ul li {
+    padding: 2px 0;
+    border: none;
+    margin: 0;
+    counter-increment: none;
+  }
+  ol.tasks li .pending ul li::before {
+    content: none;
+  }
+  ol.tasks li.completed {
+    text-decoration: line-through;
+    color: var(--muted);
+  }
+  ol.tasks li.completed::before {
+    background: var(--done-soft);
+    color: var(--done);
+    content: "\2713";
+  }
+  ol.tasks li.in-progress::before {
+    background: #fef3c7;
+    color: #b45309;
+    content: "\25CF";
+    font-size: 10px;
+  }
+  ol.tasks li.in-progress::after {
+    content: "in progress";
+    display: inline-block;
+    margin-left: 10px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #b45309;
+    background: #fef3c7;
+    padding: 2px 8px;
+    border-radius: 10px;
+    vertical-align: middle;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  ul.commits {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  ul.commits li {
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border);
+  }
+  ul.commits li:last-child { border-bottom: none; }
+  .desc code {
+    background: #f3f4f6;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 1px 6px;
+    font-size: 13px;
+    color: #111827;
+  }
+  .commit-hash {
+    display: inline-block;
+    margin-top: 6px;
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, monospace;
+    font-size: 12px;
+    color: var(--chip-ink);
+    background: var(--chip);
+    padding: 2px 8px;
+    border-radius: 4px;
+  }
+  .author {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+  .author .dot {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--done);
+  }
+  footer {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Work Schedule</h1>
+      <div class="sub">Week of May 4, 2026</div>
+      <div class="nav">
+        <a href="index.html">
+          <span class="label-main">Go Back</span>
+          <span class="arrow">&rarr;</span>
+        </a>
+      </div>
+    </header>
+
+    <section class="section">
+      <h2><span class="bar"></span>Tasks for This Week</h2>
+      <ol class="tasks">
+        <li class="in-progress">
+          Marketing/SEO.
+          <span class="pending">
+            <ul>
+              <li>
+                Start working with Semrush.
+                <span style="display:block;margin-top:4px;font-size:11px;color:#b45309;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">Pending:</span>
+                <ul>
+                  <li>Link to Facebook Account</li>
+                  <li>Link to products from Business Profile</li>
+                  <li>Google Business Profile Account</li>
+                  <li>Set youtube video</li>
+                  <li>Set Twitter account</li>
+                  <li>Login in 2mmarketplaces@gmial.com<br>(to set G4(analytics) and start tracking traffic from GBP)</li>
+                </ul>
+              </li>
+              <li>Set Shopify so the products can be displayed in &ldquo;Google Marketplace&rdquo;.</li>
+            </ul>
+          </span>
+        </li>
+        <li class="in-progress">
+          Development.
+          <span class="pending">
+            <ul>
+              <li>Scag products. <span style="display:inline-block;margin-left:10px;font-size:11px;font-weight:600;color:#059669;background:#d1fae5;padding:2px 8px;border-radius:10px;vertical-align:middle;text-transform:uppercase;letter-spacing:0.04em;">done</span></li>
+              <li>
+                Getting ready the Kawasaki csv. <span style="display:inline-block;margin-left:10px;font-size:11px;font-weight:600;color:#059669;background:#d1fae5;padding:2px 8px;border-radius:10px;vertical-align:middle;text-transform:uppercase;letter-spacing:0.04em;">done</span>
+                <span style="display:block;margin-top:4px;font-size:11px;color:#b45309;font-weight:600;text-transform:uppercase;letter-spacing:0.04em;">Pending:</span>
+                <ul>
+                  <li>Testing changes in Kawasaki store <span style="display:inline-block;margin-left:6px;font-size:10px;font-weight:600;color:#b45309;background:#fef3c7;padding:1px 7px;border-radius:10px;vertical-align:middle;text-transform:uppercase;letter-spacing:0.04em;">in progress</span></li>
+                </ul>
+              </li>
+              <li>Get images from Kawasaki CSV. <span style="display:inline-block;margin-left:6px;font-size:10px;font-weight:600;color:#b45309;background:#fef3c7;padding:1px 7px;border-radius:10px;vertical-align:middle;text-transform:uppercase;letter-spacing:0.04em;">in progress</span></li>
+            </ul>
+          </span>
+        </li>
+        <li class="in-progress">
+          Operations.
+          <span class="pending">
+            <ul>
+              <li>
+                Order &ldquo;Products/Purchase orders&rdquo; from the vendors&rsquo; websites.
+                <span style="display:block;margin-top:2px;color:#6b7280;font-size:12px;">(This is a task I am doing with Jose.)</span>
+              </li>
+            </ul>
+          </span>
+        </li>
+      </ol>
+    </section>
+
+    <section class="section done">
+      <h2 class="meta">
+        Friday, May 1, 2026 &middot;
+      </h2>
+      <span class="author"><span class="dot"></span>Author: unknown &lt;ferralespereira&gt;</span>
+      <div class="summary">
+        <strong>Summary</strong>
+        Major Scag CSV cleanup pass: updated <code>Variant Price</code> (~43,000 rows) using the four reference files with several matcher fixes, applied May Echo/Shindaiwa overrides (9,966 rows), refreshed <code>Cost per item</code> (8,208 rows), corrected <code>dont-sell</code> Tags (~7,500 changes), filled <code>item_superseded_handle</code> for 310 rows, and set <code>Variant Compare At Price</code> to Variant Price &times; 1.3 across 119,253 rows. Working with Jose ordering Carswell, Yanmar, Bush, Grasshopper, American Landmaster, and Sthil in the afternoon.
+      </div>
+      <ul class="commits">
+        <li>
+          <div class="desc">
+            Scag csv &rarr; <code>Variant Price</code>: updated ~43,000 rows from the four reference files (Billy Goat, Echo/Shindaiwa March, Scag Dealer, Kawasaki). Required several matcher fixes along the way: dash-stripped Kawasaki SKUs (+246), multi-step Echo supersession chains (+3), Scag S-prefix REPLACED-BY chains (+308), and the <code>item_superseded_by</code> fallback for previously-unmatched rows.
+          </div>
+        </li>
+        <li>
+          <div class="desc">
+            Scag csv &rarr; <code>Variant Price</code> (May override): applied the new May Echo/Shindaiwa file&rsquo;s Retail values, overriding 9,966 prices in <code>file_3</code> (the only file with Echo/Shindaiwa rows).
+          </div>
+        </li>
+        <li>
+          <div class="desc">
+            Scag csv &rarr; <code>Cost per item</code>: updated 8,208 rows in <code>file_3</code> using the May file&rsquo;s Bracket 1 column for the same 9,966 rows whose price changed.
+          </div>
+        </li>
+        <li>
+          <div class="desc">
+            Scag csv &rarr; <code>Tags</code> / <code>dont-sell</code>: set the tag correctly for unmatched rows, excluding KOHLER ENGINE (no Kohler price file) and image-attachment rows. About 7,500 tag changes total across all files.
+          </div>
+        </li>
+        <li>
+          <div class="desc">
+            Scag csv &rarr; <code>item_superseded_handle</code>: filled in for 310 rows by looking up each successor SKU&rsquo;s Handle across all three files. 1,571 rows remain blank because their 1,276 unique successor SKUs aren&rsquo;t yet products in the Shopify catalog (mostly Kawasaki).
+          </div>
+        </li>
+        <li>
+          <div class="desc">
+            Scag csv &rarr; <code>Variant Compare At Price</code>: set to Variant Price &times; 1.3 for 119,253 rows.
+          </div>
+        </li>
+        <li>
+          <div class="desc">
+            Working with Jose &rarr; ordering Carswell, Yanmar, Bush, Grasshopper, American Landmaster, Sthil (in the afternoon).
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <footer>Week of May 4, 2026</footer>
+  </div>
+</body>
+</html>
