@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Scag OEM Parts — Competitor Price Comparison</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<style>
+  :root {
+    --bg: #f8fafc;
+    --card: #ffffff;
+    --ink: #0f172a;
+    --muted: #64748b;
+    --border: #e2e8f0;
+    --ours: #2563eb;
+    --comp: #eab308;
+    --good: #16a34a;
+    --bad: #dc2626;
+    --warn: #d97706;
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 24px 16px 64px;
+    line-height: 1.5;
+  }
+  h1 { margin: 0 0 4px; font-size: 24px; }
+  h2 { margin: 32px 0 12px; font-size: 18px; }
+  .meta { color: var(--muted); margin: 0 0 24px; font-size: 14px; }
+  .summary {
+    background: var(--card);
+    border-left: 4px solid var(--ours);
+    padding: 16px 20px;
+    border-radius: 4px;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+    margin-bottom: 8px;
+  }
+  .summary p { margin: 0 0 8px; }
+  .summary p:last-child { margin-bottom: 0; }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 24px;
+  }
+  .chart-wrap { position: relative; height: 420px; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+  th, td {
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  th {
+    background: #f1f5f9;
+    font-weight: 600;
+    color: var(--muted);
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill-good { background: #dcfce7; color: #166534; }
+  .pill-bad  { background: #fee2e2; color: #991b1b; }
+  .pill-warn { background: #fef3c7; color: #92400e; }
+  .pill-mute { background: #e2e8f0; color: #475569; }
+  .legend-tag {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+  .footnote { color: var(--muted); font-size: 12px; margin-top: 12px; }
+  a { color: var(--ours); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<h1>Scag OEM Parts — Competitor Price Comparison</h1>
+<p class="meta">10 most-recently-updated sellable products (excluding <code>dont-sell</code> tag) from <code>scagoemparts.myshopify.com</code> · scanned against US online retailers · 2026-05-07</p>
+
+<div class="summary">
+  <p><strong>Pattern:</strong> Your store is the cheapest on small Briggs/Murray/Snapper hardware (rows 1, 2, 4) but consistently more expensive than the lowest US competitor on every Kawasaki-branded part scanned (rows 5–10).</p>
+  <p><strong>Margin tiers:</strong> Hardware items (Briggs/Murray/Snapper) are priced at ~25% gross margin; Kawasaki regulators / pump / spark plug at ~38%; the Kawasaki starter back down at 25%. The Kawasaki price gap vs. competitors is largely a markup-tier choice, not a cost issue.</p>
+  <p><strong>Items to watch:</strong> NGK <code>BMR7A</code> at $6.97 vs market $3.19 — and the market price is <em>below your $4.35 cost</em>, so you can't profitably match it. Kawasaki starter <code>99996-6120</code> at $235.33 vs market $189.99: cheapest competitor still leaves $13 of headroom over your cost.</p>
+  <p class="footnote">Row 3 (<code>1677029SM</code>) excluded from charts — no competitor exact-match found anywhere; likely dealer-only or NLA. Row 4 competitor figure is search-snippet-only and marked uncertain.</p>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">Cost · Your price · Lowest US competitor (USD)</h2>
+  <p class="footnote" style="margin-top:0">
+    <span class="legend-tag" style="background: #cbd5e1"></span>Your cost
+    &nbsp;&nbsp;
+    <span class="legend-tag" style="background: var(--ours)"></span>Your selling price
+    &nbsp;&nbsp;
+    <span class="legend-tag" style="background: var(--comp)"></span>Lowest confirmed US competitor
+  </p>
+  <div class="chart-wrap"><canvas id="priceChart"></canvas></div>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">Your price vs. market — % difference</h2>
+  <p class="footnote" style="margin-top:0">
+    <span class="legend-tag" style="background: var(--good)"></span>You're cheaper than market
+    &nbsp;&nbsp;
+    <span class="legend-tag" style="background: var(--bad)"></span>You're more expensive than market
+  </p>
+  <div class="chart-wrap"><canvas id="diffChart"></canvas></div>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">Same data — line view</h2>
+  <p class="footnote" style="margin-top:0">
+    <span class="legend-tag" style="background: #cbd5e1"></span>Your cost
+    &nbsp;&nbsp;
+    <span class="legend-tag" style="background: var(--ours)"></span>Your selling price
+    &nbsp;&nbsp;
+    <span class="legend-tag" style="background: var(--comp)"></span>Lowest US competitor
+    &nbsp;·&nbsp;
+    <a href="#" id="toggleLog">Toggle log scale</a>
+  </p>
+  <div class="chart-wrap"><canvas id="lineChart"></canvas></div>
+  <p class="footnote">Lines crossing reveal where competitors price above or below you. Where the gray line dips <em>below</em> the light-gray cost line (BMR7A), competitors are selling for less than what the part costs you.</p>
+</div>
+
+<div class="card">
+  <h2 style="margin-top:0">Source data</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Part #</th>
+        <th>Title</th>
+        <th>Brand</th>
+        <th class="num">Cost</th>
+        <th class="num">Your price</th>
+        <th class="num">Margin %</th>
+        <th class="num">Lowest competitor</th>
+        <th>Source</th>
+        <th class="num">Δ vs market</th>
+        <th>Status</th>
+      </tr>
+    </thead>
+    <tbody id="dataTable"></tbody>
+  </table>
+  <p class="footnote">Δ % = (your price − competitor) / competitor. Positive = you're more expensive; negative = you're cheaper.</p>
+</div>
+
+<script>
+const products = [
+  { num: 1,  partNum: "15X143MA",   title: "NUT, 25-20 HEX FLG CTR",       brand: "Briggs/Murray",  cost: 2.85,   ours: 3.80,   comp: 5.80,   source: "Farm Parts Store",  url: "https://farmpartsstore.com/hex-flange-control-nut-15x143ma/" },
+  { num: 2,  partNum: "1670578SM",  title: "KNOB-INT THR .312-18",         brand: "Briggs/Snapper", cost: 10.13,  ours: 13.50,  comp: 15.27,  source: "eReplacementParts", url: "https://www.ereplacementparts.com/wing-nut-p-1681774.html" },
+  { num: 3,  partNum: "1677029SM",  title: "SCREW-SET HEX SKT CUP",        brand: "Briggs/Snapper", cost: 1.58,   ours: 2.10,   comp: null,   source: null,                url: null,  noData: true },
+  { num: 4,  partNum: "1928919SM",  title: "NUT-HEX & WASHER ASMY",        brand: "Briggs/Snapper", cost: 1.88,   ours: 2.50,   comp: 3.99,   source: "eReplacementParts", url: null,  uncertain: true },
+  { num: 5,  partNum: "21066-7011", title: "Kawasaki REGULATOR-VOLTAGE",   brand: "Kawasaki",       cost: 43.49,  ours: 70.15,  comp: 67.34,  source: "Russo Power",       url: "https://russopower.com/products/kawasaki-21066-7011-voltage-regulator" },
+  { num: 6,  partNum: "21066-7017", title: "Kawasaki REGULATOR-VOLTAGE",   brand: "Kawasaki",       cost: 28.42,  ours: 45.84,  comp: 39.18,  source: "SEPW",              url: "https://www.sepw.com/kawasaki-21066-7017-regulator-voltage/" },
+  { num: 7,  partNum: "21066-0736", title: "Kawasaki REGULATOR-VOLTAGE",   brand: "Kawasaki",       cost: 37.74,  ours: 60.87,  comp: 54.54,  source: "Equipatron",        url: "https://www.equipatron.com/products/kawasaki-21066-0736-regulator" },
+  { num: 8,  partNum: "BMR7A",      title: "NGK Spark Plug",               brand: "Kawasaki/NGK",   cost: 4.35,   ours: 6.97,   comp: 3.19,   source: "Russo Power",       url: "https://russopower.com/products/ngk-bmr7a-spark-plug" },
+  { num: 9,  partNum: "49040-0801", title: "Kawasaki PUMP-FUEL",           brand: "Kawasaki",       cost: 21.17,  ours: 34.16,  comp: 32.79,  source: "Russo Power",       url: "https://russopower.com/products/kawasaki-49040-0801-fuel-pump" },
+  { num: 10, partNum: "99996-6120", title: "Kawasaki Electric Starter",    brand: "Kawasaki",       cost: 176.51, ours: 235.33, comp: 189.99, source: "Russo Power",       url: "https://russopower.com/products/kawasaki-99996-6120-starter-electric" }
+];
+
+// Charts: skip rows with no competitor data
+const charted = products.filter(p => p.comp !== null);
+
+const labels = charted.map(p => `#${p.num} ${p.partNum}`);
+const costData = charted.map(p => p.cost);
+const oursData = charted.map(p => p.ours);
+const compData = charted.map(p => p.comp);
+const diffPct  = charted.map(p => +(((p.ours - p.comp) / p.comp) * 100).toFixed(1));
+const diffColors = diffPct.map(d => d > 0 ? '#dc2626' : '#16a34a');
+
+new Chart(document.getElementById('priceChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [
+      { label: 'Your cost',            data: costData, backgroundColor: '#cbd5e1', borderRadius: 4 },
+      { label: 'Your selling price',   data: oursData, backgroundColor: '#2563eb', borderRadius: 4 },
+      { label: 'Lowest US competitor', data: compData, backgroundColor: '#eab308', borderRadius: 4 }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y.toFixed(2)}`
+        }
+      }
+    },
+    scales: {
+      y: {
+        beginAtZero: true,
+        ticks: { callback: v => '$' + v }
+      }
+    }
+  }
+});
+
+const lineChart = new Chart(document.getElementById('lineChart'), {
+  type: 'line',
+  data: {
+    labels,
+    datasets: [
+      { label: 'Your cost',            data: costData, borderColor: '#cbd5e1', backgroundColor: '#cbd5e1', tension: 0.2, pointRadius: 4, pointHoverRadius: 6 },
+      { label: 'Your selling price',   data: oursData, borderColor: '#2563eb', backgroundColor: '#2563eb', tension: 0.2, pointRadius: 4, pointHoverRadius: 6, borderWidth: 2.5 },
+      { label: 'Lowest US competitor', data: compData, borderColor: '#eab308', backgroundColor: '#eab308', tension: 0.2, pointRadius: 4, pointHoverRadius: 6, borderDash: [4, 4] }
+    ]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    interaction: { mode: 'index', intersect: false },
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => `${ctx.dataset.label}: $${ctx.parsed.y.toFixed(2)}`
+        }
+      }
+    },
+    scales: {
+      y: {
+        type: 'linear',
+        beginAtZero: true,
+        ticks: { callback: v => '$' + v }
+      }
+    }
+  }
+});
+
+document.getElementById('toggleLog').addEventListener('click', e => {
+  e.preventDefault();
+  const isLog = lineChart.options.scales.y.type === 'logarithmic';
+  lineChart.options.scales.y.type = isLog ? 'linear' : 'logarithmic';
+  lineChart.options.scales.y.beginAtZero = isLog ? true : false;
+  e.target.textContent = isLog ? 'Toggle log scale' : 'Back to linear scale';
+  lineChart.update();
+});
+
+new Chart(document.getElementById('diffChart'), {
+  type: 'bar',
+  data: {
+    labels,
+    datasets: [{
+      label: '% vs lowest competitor',
+      data: diffPct,
+      backgroundColor: diffColors,
+      borderRadius: 4
+    }]
+  },
+  options: {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: {
+        callbacks: {
+          label: ctx => (ctx.parsed.y >= 0 ? '+' : '') + ctx.parsed.y + '% vs market'
+        }
+      }
+    },
+    scales: {
+      y: {
+        ticks: { callback: v => (v >= 0 ? '+' : '') + v + '%' }
+      }
+    }
+  }
+});
+
+const tbody = document.getElementById('dataTable');
+products.forEach(p => {
+  const tr = document.createElement('tr');
+  let pill, deltaCell;
+  if (p.noData) {
+    pill = '<span class="pill pill-mute">No data</span>';
+    deltaCell = '—';
+  } else {
+    const d = ((p.ours - p.comp) / p.comp) * 100;
+    deltaCell = (d >= 0 ? '+' : '') + d.toFixed(1) + '%';
+    if (p.uncertain) {
+      pill = '<span class="pill pill-warn">Uncertain</span>';
+    } else if (d > 10) {
+      pill = '<span class="pill pill-bad">More expensive</span>';
+    } else if (d < 0) {
+      pill = '<span class="pill pill-good">Cheaper</span>';
+    } else {
+      pill = '<span class="pill pill-mute">~Market</span>';
+    }
+  }
+  const sourceCell = p.url
+    ? `<a href="${p.url}" target="_blank" rel="noopener">${p.source}</a>`
+    : (p.source || '—');
+  const margin = ((p.ours - p.cost) / p.ours) * 100;
+  const compBelowCost = (p.comp !== null && p.comp < p.cost);
+  const compCell = p.comp !== null
+    ? `$${p.comp.toFixed(2)}${compBelowCost ? ' <span class="pill pill-bad" title="Competitor sells below your cost">below cost</span>' : ''}`
+    : '—';
+  tr.innerHTML = `
+    <td>${p.num}</td>
+    <td><code>${p.partNum}</code></td>
+    <td>${p.title}</td>
+    <td>${p.brand}</td>
+    <td class="num">$${p.cost.toFixed(2)}</td>
+    <td class="num">$${p.ours.toFixed(2)}</td>
+    <td class="num">${margin.toFixed(1)}%</td>
+    <td class="num">${compCell}</td>
+    <td>${sourceCell}</td>
+    <td class="num">${deltaCell}</td>
+    <td>${pill}</td>
+  `;
+  tbody.appendChild(tr);
+});
+</script>
+
+</body>
+</html>
